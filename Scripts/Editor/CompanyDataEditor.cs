@@ -15,7 +15,6 @@ public class CompanyDataEditor : EditorWindow
         EditorWindow.GetWindow(typeof(CompanyDataEditor)).Show();
     }
 
-
     private void OnGUI()
     {
         EditorGUILayout.BeginVertical();
@@ -95,45 +94,6 @@ public class CompanyDataEditor : EditorWindow
                 {
                     AvailableBuildingEditor buildingEditor = new AvailableBuildingEditor();
                     missionEditor.Buildings[buildInd] = buildingEditor;
-
-                    #region UPDATE ВРЕМЕННЫЙ!
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    // UPDATE ВРЕМЕННЫЙ!
-                    /*
-                    Base.BLOCK_TYPE blockType = Base.BLOCK_TYPE.NO_TYPE;
-                    Base.GO_TYPE goTypeToUpdate = Base.StringToGOType(mission.Buildings[buildInd].BuildingType);
-                    switch(goTypeToUpdate)
-                    {
-                        case Base.GO_TYPE.HOME:
-                            blockType = Base.BLOCK_TYPE.HOME_BLOCK;
-                            break;
-                        case Base.GO_TYPE.KENNEL:
-                            blockType = Base.BLOCK_TYPE.KENNEL_BLOCK;
-                            break;
-                        case Base.GO_TYPE.ENERGY_STATION:
-                            blockType = Base.BLOCK_TYPE.ENERGY_STATION_BLOCK;
-                            break;
-                        case Base.GO_TYPE.CHURCH:
-                            blockType = Base.BLOCK_TYPE.CHURCH_BLOCK;
-                            break;
-                    }
-
-
-                    buildingEditor.BuildingType = blockType;
-                    */
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    /****************************************/
-                    #endregion
 
                     buildingEditor.BuildingType = Base.StringToBlockType(mission.Buildings[buildInd].BuildingType);
                     buildingEditor.Weight = mission.Buildings[buildInd].Weight;
@@ -232,9 +192,7 @@ public class CompanyDataEditor : EditorWindow
                     dropToWrite.DropType = mission.DropDescriptor.DropItems[dropInd].DropType.ToString();
                     dropToWrite.DropWeight = mission.DropDescriptor.DropItems[dropInd].DropWeight;
                 }
-
             }
-
 
             string dataAsJson = JsonUtility.ToJson(companyDescriptorToWrite);
             File.WriteAllText(filePath, dataAsJson);

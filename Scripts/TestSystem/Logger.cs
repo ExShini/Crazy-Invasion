@@ -2,6 +2,12 @@
 using System.IO;
 using System;
 
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+/* ДАННЫЙ КЛАСС ИСПОЛЬЗУЕТСЯ ДЛЯ ЛОГИРОВАНИЯ ПОТЕНЦИАЛЬНО ОПАСНЫХ СИТУАЦИЙ
+ * ТЕКУЩАЯ ВЕРСИЯ ПРЕДПОЛАГАЕТ ИСПОЛЬЗОВАНИЕ ТОЛЬКО В ЦЕЛЯХ РАЗРАБОТКИ
+ * 
+ */
+
 public class Logger
 {
     protected static int s_errorReportIndex = 0;
@@ -27,7 +33,7 @@ public class Logger
     }
 
 
-    public static void CreatePathFinderErrorReport(ref WayNode[,] bluprintOfPath, Point from, Point to, ref bool[,] freeSpaceMap)
+    public static void CreatePathFinderErrorReport(WayNode[,] bluprintOfPath, Point from, Point to, bool[,] freeSpaceMap)
     {
         string fileName = "PathFinderReport_";
         string logPath = @"E:\Game Projects\Logs";

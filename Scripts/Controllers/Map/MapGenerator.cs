@@ -376,11 +376,10 @@ public class MapGenerator : MonoBehaviour
                 {
                     instDescriptor.UpdateFreeSpaceMap(SizeOfBlocks);
                     // обновляем правила дорог
-                    RoadManager.GetInstance().UpdateRulesForBlock(x, y, ref instDescriptor.RoadConnections);
+                    RoadManager.GetInstance().UpdateRulesForBlock(x, y, instDescriptor.RoadConnections);
                 }
 
                 PathFinder.GetInstance().ApplyBlockMapData(x, y, instDescriptor);
-
             }
         }
     }
@@ -397,7 +396,7 @@ public class MapGenerator : MonoBehaviour
     void GenerateBlockContent(GameObject block, BlockDescriptor descriptor, int x, int y)
     {
         // определяемся с ограничениями на соединение дорог
-        RoadManager.GetInstance().SetRoadRulesToBlock(ref descriptor, x, y);
+        RoadManager.GetInstance().SetRoadRulesToBlock(descriptor, x, y);
 
 
         // обновляем карту занятых и свободных клеток

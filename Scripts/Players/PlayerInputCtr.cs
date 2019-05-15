@@ -178,7 +178,6 @@ public class PlayerInputCtr
                 moveHorizontal = m_lastHorizontalSpeed;
                 moveVertical = m_lastVerticalSpeed;
                 isMoved = true;
-
             }
 
             direction = m_lastDirection;

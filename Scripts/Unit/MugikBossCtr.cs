@@ -11,25 +11,8 @@ using UnityEditor;
 // если бы не характер - был бы первым женихом
 //
 /**********************************************************************************/
-public class MugikBossCtr: MugikCtr
+public class MugikBossCtr : MugikCtr
 {
-    void Start()
-    {
-        InitializeUnit();
-        /*
-        m_state = UNIT_STATE.ACTIVE;
-        Weapon.SetUnitID(ID);
-        Weapon.SetOwner(PLAYER.NEUTRAL);
-        Alg_WanderingHunter alg = new Alg_WanderingHunter(this);
-        alg.SetWeaponController(Weapon);
-        alg.SearchingRadius = SearchingRadius;
-        alg.SpeedMultiplier = SpeedMultiplier;
-        alg.SearchRate = 0.7f;
-        m_algorithm = alg;
-        m_ownerID = (int)PLAYER.NEUTRAL;
-        */
-    }
-
     /**********************************************************************************/
     // обработчик смерти
     //

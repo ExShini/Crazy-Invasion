@@ -186,6 +186,9 @@ public class TargetController : MonoBehaviour
 
         // создаем экземпляр юнита 
         GameObject bossObject = ObjectFactory.GetInstance().CreateGObject(new Vector2(0, 0), Base.DIREC.DOWN, bossGOType);
+        // устанавливаем владельца
+        CIGameObject gmo = bossObject.GetComponent<CIGameObject>();
+        gmo.Owner = (int)PLAYER.NEUTRAL;
 
         // выбираем рандомную позицию для юнита
         MapGenerator mg = MapGenerator.GetInstance();
@@ -199,7 +202,6 @@ public class TargetController : MonoBehaviour
         mg.PlaceObjectInBlock(x, y, bossObject);
 
         // сохраняем объект как цель уровня
-        CIGameObject gmo = bossObject.GetComponent<CIGameObject>();
         m_npcTarget[gmo.ID] = bossObject;
     }
 

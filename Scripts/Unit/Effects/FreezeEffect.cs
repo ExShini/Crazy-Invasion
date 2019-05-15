@@ -59,7 +59,7 @@ public class FreezeEffect : TimeLimmitedEffect
     public override void Deactivate()
     {
         // возвращаем значение мультипликатора скорости и сбрасываем счётчик эффекта
-        if(m_isActive)
+        if (m_isActive)
         {
             m_controlledCIO.speedMultiplier += m_freezePowerApplyed;
             m_freezePowerApplyed = 0.0f;

@@ -1,10 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
-
-using DigitalRuby.SoundManagerNamespace;
-
 
 /**********************************************************************************/
 // GameAudioManager
@@ -69,10 +64,7 @@ public class GameAudioManager : MonoBehaviour
     protected float m_currentTrackTiming = 0.0f;
 
 
-
-    #region singleton
-    public static GameAudioManager Instance { get { return s_instance; } }
-    private static GameAudioManager s_instance;   // GameSystem local instance
+    public static GameAudioManager Instance { get; private set; }
 
     /**********************************************************************************/
     // делаем себя бессмертными
@@ -80,14 +72,12 @@ public class GameAudioManager : MonoBehaviour
     /**********************************************************************************/
     void Awake()
     {
-        if (s_instance == null)
-            s_instance = this;
-        else if (s_instance != this)
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
     }
-    #endregion
-
 
     /**********************************************************************************/
     // парсим звуки, сохраняем всю необходимую информацию
@@ -316,26 +306,6 @@ public class GameAudioManager : MonoBehaviour
         soundEffectAudioSource.Play();
         soundEffectAudioSource.volume = SoundVolume * package.Clips[clipIndex].Volume;
         m_soundeSourceInUseCollections.AddLast(soundEffectAudioSource);
-    }
-
-    /**********************************************************************************/
-    // останавливаем музыку по ключу
-    //
-    /**********************************************************************************/
-    private void StopMusic(string MusicKey)
-    {
-        /*
-        if (!m_audioSourceCollections.ContainsKey(MusicKey))
-        {
-            Debug.LogError("We have no such music! Key: " + MusicKey);
-        }
-
-        
-        AudioSource source = m_audioSourceCollections[MusicKey];
-        //source.Stop();
-        //source.StopLoopingMusicManaged();
-
-        */
     }
 
     /**********************************************************************************/

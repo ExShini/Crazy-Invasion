@@ -305,8 +305,6 @@ public abstract class Unit : CIGameObject
         {
             animator.SetInteger("direction", (int)direction);
         }
-
-        
     }
 
 

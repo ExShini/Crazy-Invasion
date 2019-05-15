@@ -248,7 +248,7 @@ public class PathFinder
     // функция передающая информацию о соединениях блоков друг с другом
     //
     /**********************************************************************************/
-    public void ApplyBlockConnectionData(ref BlockDescriptorImitation[,] blockConnectionData)
+    public void ApplyBlockConnectionData(BlockDescriptorImitation[,] blockConnectionData)
     {
         for (int x = 0; x < m_xSizeOfMap; x++)
         {
@@ -610,7 +610,7 @@ public class PathFinder
             }
         }
 
-        PrepareBluprintOfPath(ref bluprintOfRoad, from, to, ref m_connectionGlobalMap, m_sizeOfBlock * 3);
+        PrepareBluprintOfPath(bluprintOfRoad, from, to, m_connectionGlobalMap, m_sizeOfBlock * 3);
 
         // проходим по результирующему пути задом наперёд и формируем список точек пути
         Point toProcess = new Point(to);
@@ -635,7 +635,7 @@ public class PathFinder
         {
             if (!toProcess.IsSamePoint(from))
             {
-                Logger.CreatePathFinderErrorReport(ref bluprintOfRoad, from, to, ref m_freeSpaceGlobalMap);
+                Logger.CreatePathFinderErrorReport(bluprintOfRoad, from, to, m_freeSpaceGlobalMap);
                 Debug.LogError("ERROR!!! Path constraction was failed!!! from: " + from.ToString() + " to: " + to.ToString());
             }
         }
@@ -675,7 +675,7 @@ public class PathFinder
             }
         }
 
-        PrepareBluprintOfPath(ref bluprintOfRoad, from, to, ref m_blockConnectionData, m_sizeOfBlock * 4);
+        PrepareBluprintOfPath(bluprintOfRoad, from, to, m_blockConnectionData, m_sizeOfBlock * 4);
 
         // проходим по результирующему пути задом наперёд и запоминаем направление движения 
         // для системы указателей важно только направление первого шага в пути
@@ -722,7 +722,7 @@ public class PathFinder
     // @ maxCost - максимальная кол-во итераций при расчёте пути
     //
     /**********************************************************************************/
-    void PrepareBluprintOfPath(ref WayNode[,] bluprintOfPath, Point from, Point to, ref BlockDescriptorImitation[,] map, int maxCost)
+    void PrepareBluprintOfPath(WayNode[,] bluprintOfPath, Point from, Point to, BlockDescriptorImitation[,] map, int maxCost)
     {
         LinkedList<Point> currentPontsToProcess = new LinkedList<Point>();
         LinkedList<Point> nextIterationPontsToProcess = new LinkedList<Point>();
@@ -752,19 +752,19 @@ public class PathFinder
 
                 // просчитываем верхную точку, если соединение возможно
                 if (map[currentPoint.x, currentPoint.y].RoadConnections[(int)Base.DIREC.UP] != ROAD_CONNECTION_STATUS.BLOCKED)
-                    CalculatePoint(ref bluprintOfPath, currentPoint, to, Base.DIREC.DOWN, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                    CalculatePoint(bluprintOfPath, currentPoint, to, Base.DIREC.DOWN, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем нижнюю точку, если соединение возможно
                 if (map[currentPoint.x, currentPoint.y].RoadConnections[(int)Base.DIREC.DOWN] != ROAD_CONNECTION_STATUS.BLOCKED)
-                    CalculatePoint(ref bluprintOfPath, currentPoint, to, Base.DIREC.UP, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                    CalculatePoint(bluprintOfPath, currentPoint, to, Base.DIREC.UP, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем левую точку, если соединение возможно
                 if (map[currentPoint.x, currentPoint.y].RoadConnections[(int)Base.DIREC.LEFT] != ROAD_CONNECTION_STATUS.BLOCKED)
-                    CalculatePoint(ref bluprintOfPath, currentPoint, to, Base.DIREC.RIGHT, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                    CalculatePoint(bluprintOfPath, currentPoint, to, Base.DIREC.RIGHT, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем правую точку, если соединение возможно
                 if (map[currentPoint.x, currentPoint.y].RoadConnections[(int)Base.DIREC.RIGHT] != ROAD_CONNECTION_STATUS.BLOCKED)
-                    CalculatePoint(ref bluprintOfPath, currentPoint, to, Base.DIREC.LEFT, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                    CalculatePoint(bluprintOfPath, currentPoint, to, Base.DIREC.LEFT, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
             }
 
 
@@ -808,7 +808,7 @@ public class PathFinder
         if (!buildingComplite)
         {
             Debug.LogError("We cann't buld the path!!! From: " + from + ". To: " + to);
-            Logger.CreatePathFinderErrorReport(ref bluprintOfPath, from, to, ref m_freeSpaceGlobalMap);
+            Logger.CreatePathFinderErrorReport(bluprintOfPath, from, to, m_freeSpaceGlobalMap);
         }
     }
 
@@ -819,8 +819,8 @@ public class PathFinder
     // проверяем её стоимость и на оснеовании проверки вносим коррективы в карту маршрутов
     //
     /**********************************************************************************/
-    void CalculatePoint(ref WayNode[,] bluprintOfRoadMap, Point currentPoint, Point to, Base.DIREC prevPointDir, int currentWayCost, ref int nodeClosestDist,
-        ref LinkedList<Point> currentPontsToProcess, ref LinkedList<Point> nextIterationPontsToProcess)
+    void CalculatePoint(WayNode[,] bluprintOfRoadMap, Point currentPoint, Point to, Base.DIREC prevPointDir, int currentWayCost, ref int nodeClosestDist,
+        LinkedList<Point> currentPontsToProcess, LinkedList<Point> nextIterationPontsToProcess)
     {
         int newX = currentPoint.x;
         int newY = currentPoint.y;
@@ -851,7 +851,7 @@ public class PathFinder
         WayNode wayNodeToCheck = bluprintOfRoadMap[newX, newY];
 
         // формирование цены прохода происходит из стоимости предыдущих клеток + стоимость прохода по клетке + загруженность пути
-        int possibleWayCost = currentWayCost + wayNodeToCheck.cellCost + m_trafficData[newX, newY];             // сюда???????????????????????????????????????????????????????????
+        int possibleWayCost = currentWayCost + wayNodeToCheck.cellCost + m_trafficData[newX, newY];
         Point pointToCheck = null;
 
         if (wayNodeToCheck.wayCost > possibleWayCost)

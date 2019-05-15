@@ -206,7 +206,7 @@ public class RoadManager
     /**********************************************************************************/
     public void TransferConnectionDataToPathFinder()
     {
-        PathFinder.GetInstance().ApplyBlockConnectionData(ref m_blockRoadRulesDescriptor);
+        PathFinder.GetInstance().ApplyBlockConnectionData(m_blockRoadRulesDescriptor);
     }
 
     /**********************************************************************************/
@@ -497,7 +497,7 @@ public class RoadManager
                             bd.RoadConnections[direction] = ROAD_CONNECTION_STATUS.NEEDED;
                         }
 
-                        UpdateRulesForBlock(i, z, ref bd.RoadConnections);
+                        UpdateRulesForBlock(i, z, bd.RoadConnections);
                     }
                 }
             }
@@ -509,7 +509,7 @@ public class RoadManager
     // как правило это используется для генерируемых блоков
     //
     /**********************************************************************************/
-    public void SetRoadRulesToBlock(ref BlockDescriptor descriptor, int x, int y)
+    public void SetRoadRulesToBlock(BlockDescriptor descriptor, int x, int y)
     {
         // проверки параметров
         if (x < 0 || y < 0 || descriptor == null)
@@ -618,7 +618,7 @@ public class RoadManager
 
                 // после выбора точки строим дорогу "from - to"
                 // подготавливаем чертёж
-                PrepareBluprintOfRoads(descriptor, ref roadMap, from, to, blockSize);
+                PrepareBluprintOfRoads(descriptor, roadMap, from, to, blockSize);
 
                 // обнуляем стоимости путей после каждой итерации построения
                 for (int xBuprint = 0; xBuprint < blockSize; xBuprint++)
@@ -667,7 +667,7 @@ public class RoadManager
         }
 
         // обновляем правила дорог
-        UpdateRulesForBlock(x, y, ref descriptor.RoadConnections);
+        UpdateRulesForBlock(x, y, descriptor.RoadConnections);
     }
 
     /**********************************************************************************/
@@ -675,7 +675,7 @@ public class RoadManager
     // если этого не сделать, то возможны колизии в соседних блоках, особенно это касается предопределённых блоков
     //
     /**********************************************************************************/
-    public void UpdateRulesForBlock(int x, int y, ref ROAD_CONNECTION_STATUS[] roadConnections)
+    public void UpdateRulesForBlock(int x, int y, ROAD_CONNECTION_STATUS[] roadConnections)
     {
 
         // проверки параметров
@@ -742,7 +742,7 @@ public class RoadManager
     // результат записываем в bluprintOfRoadMap
     //
     /**********************************************************************************/
-    void PrepareBluprintOfRoads(BlockDescriptor descriptor, ref WayNode[,] bluprintOfRoadMap, Point from, Point to, int sizeOfBlock)
+    void PrepareBluprintOfRoads(BlockDescriptor descriptor, WayNode[,] bluprintOfRoadMap, Point from, Point to, int sizeOfBlock)
     {
 
         // проверки параметров
@@ -782,16 +782,16 @@ public class RoadManager
                 int currentWayCost = bluprintOfRoadMap[currentPoint.x, currentPoint.y].wayCost;
 
                 // просчитываем верхную точку
-                CalculatePoint(descriptor, ref bluprintOfRoadMap, currentPoint, to, Base.DIREC.DOWN, sizeOfBlock, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                CalculatePoint(descriptor, bluprintOfRoadMap, currentPoint, to, Base.DIREC.DOWN, sizeOfBlock, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем нижнюю точку
-                CalculatePoint(descriptor, ref bluprintOfRoadMap, currentPoint, to, Base.DIREC.UP, sizeOfBlock, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                CalculatePoint(descriptor, bluprintOfRoadMap, currentPoint, to, Base.DIREC.UP, sizeOfBlock, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем левую точку
-                CalculatePoint(descriptor, ref bluprintOfRoadMap, currentPoint, to, Base.DIREC.RIGHT, sizeOfBlock, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                CalculatePoint(descriptor, bluprintOfRoadMap, currentPoint, to, Base.DIREC.RIGHT, sizeOfBlock, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
 
                 // просчитываем правую точку
-                CalculatePoint(descriptor, ref bluprintOfRoadMap, currentPoint, to, Base.DIREC.LEFT, sizeOfBlock, currentWayCost, ref nodeClosestDist, ref currentPontsToProcess, ref nextIterationPontsToProcess);
+                CalculatePoint(descriptor, bluprintOfRoadMap, currentPoint, to, Base.DIREC.LEFT, sizeOfBlock, currentWayCost, ref nodeClosestDist, currentPontsToProcess, nextIterationPontsToProcess);
             }
 
 
@@ -826,7 +826,7 @@ public class RoadManager
         if (!buildingComplite)
         {
             Debug.LogError("PrepareBluprintOfRoads: We cann't build way");
-            Logger.CreatePathFinderErrorReport(ref bluprintOfRoadMap, from, to, ref descriptor.FreeSpaceMap);
+            Logger.CreatePathFinderErrorReport(bluprintOfRoadMap, from, to, descriptor.FreeSpaceMap);
         }
         else
         {
@@ -895,10 +895,9 @@ public class RoadManager
     // проверяем её стоимость и на оснеовании проверки вносим коррективы в карту маршрутов
     //
     /**********************************************************************************/
-    void CalculatePoint(BlockDescriptor descriptor, ref WayNode[,] bluprintOfRoadMap, Point currentPoint, Point to, Base.DIREC prevPointDir, int sizeOfBlock, int currentWayCost, ref int nodeClosestDist,
-        ref LinkedList<Point> currentPontsToProcess, ref LinkedList<Point> nextIterationPontsToProcess)
+    void CalculatePoint(BlockDescriptor descriptor, WayNode[,] bluprintOfRoadMap, Point currentPoint, Point to, Base.DIREC prevPointDir, int sizeOfBlock, int currentWayCost, ref int nodeClosestDist,
+        LinkedList<Point> currentPontsToProcess, LinkedList<Point> nextIterationPontsToProcess)
     {
-
         // проверки параметров
         if (currentPoint == null || to == null || descriptor == null || bluprintOfRoadMap == null || bluprintOfRoadMap.Length == 0)
         {
@@ -910,8 +909,6 @@ public class RoadManager
                 + " bluprintOfRoadMap.Length " + bluprintOfRoadMap.Length);
             return;
         }
-
-
 
 
         int newX = currentPoint.x;
